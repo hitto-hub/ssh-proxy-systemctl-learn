@@ -4,7 +4,7 @@ import sys
 import socket
 import time
 import select
-import requests
+# import requests  # テスト用に API 呼び出しはコメントアウト
 import logging
 import traceback
 
@@ -16,27 +16,31 @@ logging.basicConfig(
 )
 
 # --- 設定値 ---
-API_ENDPOINT = "http://your-api.example.com/start_vm"  # VM 起動用の API エンドポイント
+# API_ENDPOINT = "http://your-api.example.com/start_vm"  # VM 起動用の API エンドポイント
 VM_SSH_PORT = 22            # VM の SSH ポート（通常 22）
-API_TIMEOUT = 10            # API 呼び出しのタイムアウト（秒）
+# API_TIMEOUT = 10            # API 呼び出しのタイムアウト（秒）
 POLL_INTERVAL = 2           # VM 起動待ちのポーリング間隔（秒）
 
-# --- VM 起動の API 呼び出し ---
+# --- VM 起動の API 呼び出し (テスト用に固定IPを返す) ---
 def start_vm():
     logging.debug("start_vm: APIエンドポイントにリクエストを送信します。")
-    try:
-        response = requests.post(API_ENDPOINT, timeout=API_TIMEOUT)
-        response.raise_for_status()
-        data = response.json()
-        vm_ip = data.get("vm_ip")
-        if not vm_ip:
-            logging.error("API のレスポンスに vm_ip が含まれていません。")
-            sys.exit(1)
-        logging.info("VM 起動要求完了、IP: %s", vm_ip)
-        return vm_ip
-    except Exception as e:
-        logging.exception("start_vm: VM の起動に失敗しました。")
-        sys.exit(1)
+    logging.debug("start_vm: API 呼び出しはコメントアウトして、固定の vm_ip を使用します。")
+    vm_ip = "192.168.0.57"
+    logging.info("Test mode: 固定 vm_ip を使用します: %s", vm_ip)
+    return vm_ip
+    # try:
+    #     response = requests.post(API_ENDPOINT, timeout=API_TIMEOUT)
+    #     response.raise_for_status()
+    #     data = response.json()
+    #     vm_ip = data.get("vm_ip")
+    #     if not vm_ip:
+    #         logging.error("API のレスポンスに vm_ip が含まれていません。")
+    #         sys.exit(1)
+    #     logging.info("VM 起動要求完了、IP: %s", vm_ip)
+    #     return vm_ip
+    # except Exception as e:
+    #     logging.exception("start_vm: VM の起動に失敗しました。")
+    #     sys.exit(1)
 
 # --- VM の SSH 接続可能状態を待つ ---
 def wait_for_vm(vm_ip):
@@ -89,6 +93,7 @@ def main():
         sys.exit(1)
 
     # API を呼び出して VM を起動し、IP アドレスを取得
+    # API 呼び出しはテスト用にコメントアウトし、固定 IP を利用
     vm_ip = start_vm()
 
     # VM の SSH ポートが接続可能になるまで待機
