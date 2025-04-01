@@ -18,7 +18,7 @@ logging.basicConfig(
 # --- 設定値 ---
 API_ENDPOINT = "http://192.168.0.58:5000/start_vm"  # VM 起動用の API エンドポイント
 VM_SSH_PORT = 22            # VM の SSH ポート（通常 22）
-API_TIMEOUT = 10            # API 呼び出しのタイムアウト（秒）
+API_TIMEOUT = 30            # API 呼び出しのタイムアウト（秒）
 POLL_INTERVAL = 2           # VM 起動待ちのポーリング間隔（秒）
 
 # --- VM 起動の API 呼び出し ---
