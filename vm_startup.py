@@ -26,7 +26,7 @@ def start_vm():
     logging.debug("start_vm: APIエンドポイントにリクエストを送信します。")
     try:
         response = requests.post(API_ENDPOINT, timeout=API_TIMEOUT)
-        response.raise_for_status()
+        response.raise_for_status() # ステータスコードが 200 番台でない場合は例外を発生させる
         try:
             data = response.json()
             vm_ip = data.get("vm_ip")
