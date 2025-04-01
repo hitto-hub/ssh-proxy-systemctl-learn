@@ -92,6 +92,15 @@ def main():
         logging.exception("main: 受け取ったソケットのオープンに失敗しました。")
         sys.exit(1)
 
+    # # waiting...というメッセージを表示するために、ソケットをオープンしておく
+    # sock_in.setblocking(0)
+    # sock_in.settimeout(0.1)
+    # sock_in.sendall(b"waiting...\n")
+    # # sock_in をブロッキングモードに戻す
+    # sock_in.setblocking(1)
+    # sock_in.settimeout(None)
+    # logging.debug("main: systemd から渡されたソケットのオープンに成功しました。")
+
     # API を呼び出して VM を起動し、IP アドレスを取得
     vm_ip = start_vm()
 
@@ -101,6 +110,10 @@ def main():
     # VM の SSH に接続
     logging.debug("main: VM (%s) の SSH に接続を試みます。", vm_ip)
     try:
+        # VM の SSH ポートに接続
+        # systemd のソケットを使用して接続する場合、fd 0 を使用する
+        # 直接接続する場合は、socket.create_connection を使用する
+        # sock_out = socket.create_connection((vm_ip, VM_SSH_PORT), timeout=API_TIMEOUT)
         sock_out = socket.create_connection((vm_ip, VM_SSH_PORT))
         logging.info("main: VM の SSH への接続に成功しました。")
     except Exception as e:
