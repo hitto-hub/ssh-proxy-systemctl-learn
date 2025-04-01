@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 # --- 設定値 ---
-API_ENDPOINT = "http://your-api.example.com/start_vm"  # VM 起動用の API エンドポイント
+API_ENDPOINT = "http://192.168.0.58:5000/start_vm"  # VM 起動用の API エンドポイント
 VM_SSH_PORT = 22            # VM の SSH ポート（通常 22）
 API_TIMEOUT = 10            # API 呼び出しのタイムアウト（秒）
 POLL_INTERVAL = 2           # VM 起動待ちのポーリング間隔（秒）
@@ -27,8 +27,12 @@ def start_vm():
     try:
         response = requests.post(API_ENDPOINT, timeout=API_TIMEOUT)
         response.raise_for_status()
-        data = response.json()
-        vm_ip = data.get("vm_ip")
+        try:
+            data = response.json()
+            vm_ip = data.get("vm_ip")
+        except ValueError:
+            # JSON パースに失敗した場合、プレーンテキストとして扱う
+            vm_ip = response.text.strip()
         if not vm_ip:
             logging.error("API のレスポンスに vm_ip が含まれていません。")
             sys.exit(1)
