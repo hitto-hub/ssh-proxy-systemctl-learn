@@ -4,3 +4,6 @@ Description=On-demand VM startup for SSH from %I
 [Service]
 ExecStart=/usr/local/bin/vm_startup.py
 StandardInput=socket
+StandardOutput=journal
+StandardError=journal
+RemainAfterExit=no
